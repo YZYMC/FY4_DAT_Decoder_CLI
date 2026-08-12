@@ -23,6 +23,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <endian.h>
+#include <string.h>
 
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -30,7 +32,7 @@
 
 char *datin = NULL;
 bool sfileout = 0;
-char *fileout = "decrypted.bin";
+char fileout[128] = "decrypted.bin";
 uint8_t deskey[8];
 char *keyfilepath = NULL;
 
@@ -57,7 +59,7 @@ error_t parse_opt(int key, char *arg, struct argp_state *state)
     {
         case 'o':
             sfileout = 1;
-            fileout = arg;
+            strcpy(fileout, arg);
             break;
         
         case 'k':
@@ -108,6 +110,38 @@ int main(int argc, char **argv)
 
     fclose(keyfile);
 
+    char dat_filename[106];
+
+    fseek(datfile, 0x46, SEEK_SET);
+    fread(dat_filename, 1, 106, datfile);
+
+    uint64_t bit_length;
+
+    fseek(datfile, 0x08, SEEK_SET);
+    fread(&bit_length, sizeof(bit_length), 1, datfile);
+
+    bit_length = be64toh(bit_length);
+    uint64_t byte_length = bit_length / 8;
+
+    char filetype[4];
+
+    fseek(datfile, 0xCB, SEEK_SET);
+    fread(filetype, 1, 4, datfile);
+
+    if (!sfileout)
+    {
+        strcpy(fileout, dat_filename);
+
+        char *ext = strrchr(fileout, '.');
+
+        if (strcmp(filetype, "JPG") == 0)
+            strcpy(ext, ".JPG");
+        else if (strcmp(filetype, "NC") == 0)
+            strcpy(ext, ".NC\0");
+        else
+            strcpy(ext, ".BIN");
+    }
+
     FILE *outfile = fopen(fileout, "wb");
 
     fseek(datfile, 0xE6, SEEK_SET);
@@ -141,6 +175,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    uint64_t decrypted_length = 0;
+
     while ((n = fread(readbuf, 1, sizeof(readbuf), datfile)) > 0)
     {
         if (EVP_DecryptUpdate(ctx, outbuf, &outlen, readbuf, n) != 1)
@@ -149,6 +185,7 @@ int main(int argc, char **argv)
             return 1;
         }
         fwrite(outbuf, 1, outlen, outfile);
+        decrypted_length += outlen;
     }
 
     if (EVP_DecryptFinal_ex(ctx, outbuf, &outlen) != 1)
@@ -158,6 +195,22 @@ int main(int argc, char **argv)
     }
 
     fwrite(outbuf, 1, outlen, outfile);
+    decrypted_length += outlen;
+
+    EVP_CIPHER_CTX_free(ctx);
+    OSSL_PROVIDER_unload(legacy);
+
+    fclose(datfile);
+    fclose(outfile);
+
+    if (byte_length != decrypted_length)
+    {
+        fprintf(stderr,
+            "Warning: plaintext length mismatch: "
+            "expected %" PRIu64 " bytes, got %" PRIu64 " bytes\n",
+            byte_length,
+            decrypted_length);
+    }
 
     return 0;
 }
