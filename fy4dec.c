@@ -30,7 +30,7 @@
 
 char *datin = NULL;
 bool sfileout = 0;
-char *fileout = NULL;
+char *fileout = "decrypted.bin";
 uint8_t deskey[8];
 char *keyfilepath = NULL;
 
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
 
     fclose(keyfile);
 
-    FILE *outfile = fopen("decrypted.bin", "wb");
+    FILE *outfile = fopen(fileout, "wb");
 
     fseek(datfile, 0xE6, SEEK_SET);
 
