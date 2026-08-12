@@ -1,7 +1,5 @@
 # FY4 DAT Decoder CLI
 
----
-
 ## Build
 
 ```bash
