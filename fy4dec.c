@@ -73,7 +73,7 @@ error_t parse_opt(int key, char *arg, struct argp_state *state)
 	    	break;
         
         case ARGP_KEY_END:
-		    if (state->arg_num < 1 || keyfilepath == NULL)
+		    if (state->arg_num < 1)
 			    argp_usage(state);
 		    break;
         
@@ -94,6 +94,12 @@ int main(int argc, char **argv)
     if (datfile == NULL)
     {
         perror("fopen");
+        return 1;
+    }
+
+    if (keyfilepath == NULL)
+    {
+        fprintf(stderr, "Error: No key file given\n");
         return 1;
     }
 
