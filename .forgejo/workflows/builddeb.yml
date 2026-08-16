@@ -34,9 +34,10 @@ jobs:
 
       - name: Copy
         run: |
+          mkdir output
           cp ../fy4dec_* output/
           cp ../fy4dec-dbgsym_* output/
-          
+
       - name: Upload
         uses: actions/upload-artifact@v3
         with:

@@ -11,3 +11,7 @@ fy4dec
 *.H5
 *.nc
 *.NC
+output/
+build/
+debian/.debhelper/
+debian/fy4dec/
