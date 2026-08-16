@@ -1,0 +1,36 @@
+name: Build test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-debian:
+    runs-on: debian
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential gcc libssl-dev
+
+      - name: Build
+        run: gcc fy4dec.c -o fy4dec -lcrypto
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: fy4dec-buildtest
+          path: fy4dec
+          if-no-files-found: error
