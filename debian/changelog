@@ -1,3 +1,9 @@
+fy4dec (1.0.2-1) unstable; urgency=medium
+
+  * Add workflows for the forgejo repository.
+
+ -- ZiYuan Yang <yzymc@yzynetwork.org>  Sun, 16 Aug 2026 18:31:50 +0800
+
 fy4dec (1.0.1-1) unstable; urgency=medium
 
   * Initial Debian package.
