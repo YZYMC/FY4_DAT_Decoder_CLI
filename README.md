@@ -4,7 +4,7 @@
 
 ### Forgejo/GitHub releases
 
-Pre-built binaries and packages are available on the [Releases](releases) page.
+Pre-built binaries and packages are available on the [Releases](../../../releases) page.
 
 ### Package manager
 
@@ -34,6 +34,12 @@ sudo apt install fy4dec
 
 ### Build from source
 
+#### Build dependencies
+
+- OpenSSL development libraries (`libssl-dev` on Debian)
+
+#### Build a binary file
+
 ```shell
 cc fy4dec.c -o fy4dec -lcrypto
 ```
@@ -49,7 +55,13 @@ dpkg-buildpackage -us -uc
 Using a binary key file:
 
 ```shell
-./fy4dec -k fy4b_lrit_key.bin FY4B-XXX.DAT
+fy4dec -k fy4b_lrit_key.bin FY4B-XXX.DAT
+```
+
+Using a ASCII (text) hex key file:
+
+```bash
+fy4dec -h fy4b_lrit_key.hex FY4B-XXX.DAT
 ```
 
 ## License
