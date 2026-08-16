@@ -37,7 +37,7 @@ uint8_t deskey[8];
 char *keyfilepath = NULL;
 bool verbose = 0;
 
-const char *argp_program_version = "fy4dec 1.0.1\n"
+const char *argp_program_version = "fy4dec 1.0.2\n"
                                    "Copyright 2026 ZiYuan Yang\n"
                                    "This is free software; see the source for "
                                    "copying conditions.  There is NO\n"

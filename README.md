@@ -1,12 +1,52 @@
 # FY4 DAT Decoder CLI
 
-## Build
+## Install
+
+### Forgejo/GitHub releases
+
+Pre-built binaries and packages are available on the [Releases](releases) page.
+
+### Package manager
+
+#### APT
+
+###### Supported distributions:
+
+- Debian 13 (Trixie)
+
+- Debian Forky
+
+- Ubuntu 24.04 LTS (Noble)
+
+Add APT repository:
 
 ```shell
-gcc fy4dec.c -o fy4dec -lcrypto
+curl -o /usr/share/keyrings/yzynet.asc https://sth.yzynetwork.org:8443/yzynet.asc
+echo "deb [signed-by=/usr/share/keyrings/yzynet.asc] https://apt.yzynetwork.org:8443/ trixie main" | sudo tee /etc/apt/sources.list.d/yzynetwork.list
+sudo apt update
 ```
 
-## Usage
+Install:
+
+```bash
+sudo apt install fy4dec
+```
+
+### Build from source
+
+```shell
+cc fy4dec.c -o fy4dec -lcrypto
+```
+
+#### Build a .deb package
+
+```bash
+dpkg-buildpackage -us -uc
+```
+
+## Basic usage
+
+Using a binary key file:
 
 ```shell
 ./fy4dec -k fy4b_lrit_key.bin FY4B-XXX.DAT
