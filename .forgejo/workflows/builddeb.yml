@@ -10,15 +10,11 @@ permissions:
   contents: read
 
 jobs:
-  build-debpkg:
+  build-debpkg-debian-trixie:
     strategy:
       fail-fast: false
-      matrix:
-        distro:
-          - debian
-          - ubuntu-latest
 
-    runs-on: ${{ matrix.distro }}
+    runs-on: debian
 
     steps:
       - name: Check out
@@ -30,7 +26,9 @@ jobs:
           sudo apt install -y build-essential gcc libssl-dev debhelper devscripts fakeroot
 
       - name: Build
-        run: dpkg-buildpackage -us -uc
+        run: |
+          dch --local '+trixie' "Build for Debian Trixie" -D trixie
+          dpkg-buildpackage -us -uc
 
       - name: Copy
         run: |
@@ -41,6 +39,39 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: fy4dec-debpkg-${{ matrix.distro }}
+          name: fy4dec-debpkg-debian-trixie
+          path: output/
+          if-no-files-found: error
+
+  build-debpkg-ubuntu-noble:
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential gcc libssl-dev debhelper devscripts fakeroot
+
+      - name: Build
+        run: |
+          dch --local '+noble' "Build for Ubuntu Noble" -D noble
+          dpkg-buildpackage -us -uc
+
+      - name: Copy
+        run: |
+          mkdir output
+          cp ../fy4dec_* output/
+          cp ../fy4dec-dbgsym_* output/
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: fy4dec-debpkg-ubuntu-noble
           path: output/
           if-no-files-found: error
