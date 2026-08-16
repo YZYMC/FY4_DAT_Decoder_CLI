@@ -21,6 +21,7 @@
 
 #include <argp.h>
 #include <endian.h>
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -177,6 +178,7 @@ int main(int argc, char **argv)
     {
         return 1;
     }
+    dat_filename[105] = '\0';
 
     if (verbose)
         printf("INFO: Filename: %s\n", dat_filename);
@@ -198,7 +200,11 @@ int main(int argc, char **argv)
     char filetype[4];
 
     fseek(datfile, 0xCB, SEEK_SET);
-    fread(filetype, 1, 4, datfile);
+    if (fread(filetype, 1, 4, datfile) != 4)
+    {
+        return 1;
+    }
+    filetype[3] = '\0';
 
     if (!sfileout)
     {
