@@ -34,7 +34,9 @@ char *datin = NULL;
 bool sfileout = 0;
 char fileout[128] = "decrypted.bin";
 uint8_t deskey[8];
+char hexkey[16];
 char *keyfilepath = NULL;
+bool keyfileishex = 0;
 bool verbose = 0;
 
 const char *argp_program_version = "fy4dec 1.0.2\n"
@@ -47,7 +49,8 @@ const char *argp_program_bug_address = "yzymc@yzynetwork.org";
 
 static struct argp_option options[] = {
     {"output", 'o', "FILE", 0, "Output file path"},
-    {"key-file", 'k', "FILE", 0, "DES Key binary file input"},
+    {"key-file", 'k', "FILE", 0, "Binary DES key file input"},
+    {"hex-key-file", 'h', "FILE", 0, "ASCII Hex DES key file input"},
     {"verbose", 'v', 0, 0, "Verbose"},
     {0}};
 
@@ -65,6 +68,11 @@ error_t parse_opt(int key, char *arg, struct argp_state *state)
 
     case 'k':
         keyfilepath = arg;
+        break;
+
+    case 'h':
+        keyfilepath = arg;
+        keyfileishex = 1;
         break;
 
     case 'v':
@@ -90,6 +98,29 @@ error_t parse_opt(int key, char *arg, struct argp_state *state)
 }
 
 static struct argp argp = {options, parse_opt, args_doc, doc};
+
+int hex_value(char c)
+{
+    if (c >= '0' && c <= '9')
+        return c - '0';
+
+    if (c >= 'A' && c <= 'F')
+        return c - 'A' + 10;
+
+    if (c >= 'a' && c <= 'f')
+        return c - 'a' + 10;
+
+    return -1;
+}
+
+int hex_decode(const char *hex, uint8_t *out, size_t outlen)
+{
+    for (int i = 0; i < outlen; i++)
+    {
+        out[i] = (hex_value(hex[i * 2]) << 4) | hex_value(hex[i * 2 + 1]);
+    }
+    return 0;
+}
 
 int main(int argc, char **argv)
 {
@@ -118,9 +149,20 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (fread(deskey, 1, sizeof(deskey), keyfile) != sizeof(deskey))
+    if (!keyfileishex)
     {
-        return 1;
+        if (fread(deskey, 1, sizeof(deskey), keyfile) != sizeof(deskey))
+        {
+            return 1;
+        }
+    }
+    if (keyfileishex)
+    {
+        if (fread(hexkey, 1, sizeof(hexkey), keyfile) != sizeof(hexkey))
+        {
+            return 1;
+        }
+        hex_decode(hexkey, deskey, 8);
     }
 
     if (verbose)
@@ -131,7 +173,10 @@ int main(int argc, char **argv)
     char dat_filename[106];
 
     fseek(datfile, 0x46, SEEK_SET);
-    fread(dat_filename, 1, 106, datfile);
+    if (fread(dat_filename, 1, 106, datfile) != 106)
+    {
+        return 1;
+    }
 
     if (verbose)
         printf("INFO: Filename: %s\n", dat_filename);
@@ -139,7 +184,10 @@ int main(int argc, char **argv)
     uint64_t bit_length;
 
     fseek(datfile, 0x08, SEEK_SET);
-    fread(&bit_length, sizeof(bit_length), 1, datfile);
+    if (fread(&bit_length, sizeof(bit_length), 1, datfile) != 1)
+    {
+        return 1;
+    }
 
     bit_length = be64toh(bit_length);
     uint64_t byte_length = bit_length / 8;
