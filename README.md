@@ -10,7 +10,7 @@ Pre-built binaries and packages are available on the [Releases](../../../release
 
 #### APT
 
-###### Supported distributions:
+##### Supported distributions:
 
 - Debian 13 (Trixie)
 

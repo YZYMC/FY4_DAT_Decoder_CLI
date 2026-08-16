@@ -40,7 +40,7 @@ char *keyfilepath = NULL;
 bool keyfileishex = 0;
 bool verbose = 0;
 
-const char *argp_program_version = "fy4dec 1.0.2\n"
+const char *argp_program_version = "fy4dec 1.1\n"
                                    "Copyright 2026 ZiYuan Yang\n"
                                    "This is free software; see the source for "
                                    "copying conditions.  There is NO\n"
