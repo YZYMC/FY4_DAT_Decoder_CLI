@@ -3,3 +3,5 @@
 --tar-ignore=.github
 --tar-ignore=.forgejo
 --tar-ignore=fy4dec
+--tar-ignore=debian/.gitignore
+--tar-ignore=debian/fy4dec
