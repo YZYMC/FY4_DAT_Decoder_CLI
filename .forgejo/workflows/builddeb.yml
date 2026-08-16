@@ -32,11 +32,14 @@ jobs:
       - name: Build
         run: dpkg-buildpackage -us -uc
 
+      - name: Copy
+        run: |
+          cp ../fy4dec_* output/
+          cp ../fy4dec-dbgsym_* output/
+          
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: fy4dec-debpkg-${{ matrix.distro }}
-          path: |
-            ../fy4dec_*
-            ../fy4dec-dbgsym_*
+          path: output/
           if-no-files-found: error
