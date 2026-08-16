@@ -1,0 +1,41 @@
+name: Build Debian package
+
+on:
+  push:
+    - '*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-debpkg:
+    strategy:
+      fail-fast: false
+      matrix:
+        distro:
+          - debian
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.distro }}
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential gcc libssl-dev
+
+      - name: Build
+        run: gcc fy4dec.c -o fy4dec -lcrypto
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: fy4dec-debpkg-${{ matrix.distro }}
+          path: |
+            ../fy4dec_*
+            ../fy4dec-dbgsym_*
+          if-no-files-found: error
