@@ -27,10 +27,10 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt update
-          sudo apt install -y build-essential gcc libssl-dev
+          sudo apt install -y build-essential gcc libssl-dev debhelper devscripts fakeroot
 
       - name: Build
-        run: gcc fy4dec.c -o fy4dec -lcrypto
+        run: dpkg-buildpackage -us -uc
 
       - name: Upload
         uses: actions/upload-artifact@v3
