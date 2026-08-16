@@ -27,6 +27,8 @@ jobs:
 
       - name: Build
         run: |
+          export DEBFULLNAME="ZiYuan Yang"
+          export DEBEMAIL="yzymc@yzynetwork.org"
           dch --local '+trixie' "Build for Debian Trixie" -D trixie
           dpkg-buildpackage -us -uc
 
@@ -55,6 +57,8 @@ jobs:
 
       - name: Install build tools
         run: |
+          export DEBFULLNAME="ZiYuan Yang"
+          export DEBEMAIL="yzymc@yzynetwork.org"
           sudo apt update
           sudo apt install -y build-essential gcc libssl-dev debhelper devscripts fakeroot
 
