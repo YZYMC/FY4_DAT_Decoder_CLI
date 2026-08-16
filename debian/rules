@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	$(CC) $(CFLAGS) $(CPPFLAGS) fy4dec.c -o fy4dec $(LDFLAGS) -lcrypto
+
+override_dh_auto_install:
+	install -D -m 755 fy4dec debian/fy4dec/usr/bin/fy4dec

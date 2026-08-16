@@ -1,0 +1,13 @@
+Source: fy4dec
+Section: utils
+Priority: optional
+Maintainer: ZiYuan Yang <yzymc@yzynetwork.org>
+Build-Depends: debhelper-compat (= 13), libssl-dev
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+
+Package: fy4dec
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: FY-4 DAT file decoder
+ Command-line decoder for FY-4B AGRI DAT files.
