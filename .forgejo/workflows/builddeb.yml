@@ -23,6 +23,7 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt update
+          sudo apt upgrade -y
           sudo apt install -y build-essential gcc libssl-dev debhelper devscripts fakeroot
 
       - name: Build
@@ -57,13 +58,14 @@ jobs:
 
       - name: Install build tools
         run: |
-          export DEBFULLNAME="ZiYuan Yang"
-          export DEBEMAIL="yzymc@yzynetwork.org"
           sudo apt update
+          sudo apt upgrade -y
           sudo apt install -y build-essential gcc libssl-dev debhelper devscripts fakeroot
 
       - name: Build
         run: |
+          export DEBFULLNAME="ZiYuan Yang"
+          export DEBEMAIL="yzymc@yzynetwork.org"
           dch --local '+noble' "Build for Ubuntu Noble" -D noble
           dpkg-buildpackage -us -uc
 

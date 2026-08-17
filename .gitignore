@@ -15,3 +15,6 @@ output/
 build/
 debian/.debhelper/
 debian/fy4dec/
+debian/debhelper-build-stamp
+debian/files
+debian/fy4dec.substvars
