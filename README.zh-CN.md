@@ -43,7 +43,7 @@ sudo apt install fy4dec
 #### 构建一个二进制文件
 
 ```shell
-cc fy4dec.c -o fy4dec -lcrypto
+./build.sh
 ```
 
 #### 构建一个 .deb 包

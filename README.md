@@ -43,7 +43,7 @@ sudo apt install fy4dec
 #### Build a binary file
 
 ```shell
-cc fy4dec.c -o fy4dec -lcrypto
+./build.sh
 ```
 
 #### Build a .deb package
