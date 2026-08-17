@@ -26,7 +26,7 @@ jobs:
           sudo apt install -y build-essential gcc libssl-dev
 
       - name: Build
-        run: gcc fy4dec.c -o fy4dec -lcrypto
+        run: CFLAGS="-Wall" ./build.sh
 
       - name: Upload
         uses: actions/upload-artifact@v3
