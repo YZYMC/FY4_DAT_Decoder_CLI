@@ -1,5 +1,7 @@
 # FY4 DAT Decoder CLI
 
+English | [Simplified Chinese](README.zh-CN.md)
+
 ## Install
 
 ### Forgejo/GitHub releases
@@ -8,9 +10,9 @@ Pre-built binaries and packages are available on the [Releases](../../../release
 
 ### Package manager
 
-#### APT
+### APT
 
-##### Supported distributions:
+#### Supported distributions:
 
 - Debian 13 (Trixie)
 
@@ -47,7 +49,7 @@ cc fy4dec.c -o fy4dec -lcrypto
 #### Build a .deb package
 
 ```bash
-dpkg-buildpackage -us -uc
+dpkg-buildpackage -us -uc -b
 ```
 
 ## Basic usage
