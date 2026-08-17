@@ -6,7 +6,7 @@ English | [Simplified Chinese](README.zh-CN.md)
 
 ### Forgejo/GitHub releases
 
-Pre-built binaries and packages are available on the [Releases](../../../releases) page.
+Pre-built binaries and packages are available on the Releases page.
 
 ### Package manager
 
